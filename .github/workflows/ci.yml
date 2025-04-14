@@ -13,5 +13,24 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '18.x'
+          cache: 'npm'
       - run: npm ci
       - run: npm run lint
+      - run: npm run format
+  unit-test-job:
+    needs: lint-job
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        node-version: [16.x, 18.x]
+    steps:
+      - uses: actions/checkout@v4
+      - name: test on ${{matrix.os}} nodejs version ${{matrix.node-version}}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{matrix.node-version}}
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run test:unit
