@@ -35,10 +35,9 @@ jobs:
           password: ${{secrets.SSH_PASSWORD}}
           port: '22'
           script: |
-            echo "${{ secrets.GITHUB_TOKEN }}"
             export DOCKER_DEFAULT_PLATFORM=linux/amd64
             docker logout ghcr.io
-            docker login -u ${{ github.actor }} --password-stdin ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}
+            echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u ${{ github.actor }} --password-stdin ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}
             docker rm -f ${{ env.CONTAINER_NAME }} || true
             docker pull ${{ env.DOCKER_IMAGE_URL }}
             docker run --restart=always -d --name ${{ env.CONTAINER_NAME }} -p 80:80 ${{ env.DOCKER_IMAGE_URL }}
