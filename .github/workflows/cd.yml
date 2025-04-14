@@ -22,3 +22,23 @@ jobs:
         with:
           name: dist-production
           path: dist
+
+  deploy-to-production:
+    needs: build-production-job
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download dist folder artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-production
+          path: dist
+      - run: ls dist
+
+      - uses: actions/checkout@v4
+
+      - name: publish vie to github pages
+        uses: SerhiiKa/VuePagesAction@1.0.4
+        with:
+          username: ${{github.action}}
+          reponame: ${{github.event.repository.name}}
+          token: ${{ secrets.GITHUB_TOKEN }}
