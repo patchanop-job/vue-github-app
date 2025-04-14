@@ -31,7 +31,7 @@ jobs:
         uses: appleboy/ssh-action@v1.0.0
         with:
           host: '172.172.218.218'
-          username: ${{secrets.SSH_USERNAME}}
+          username: patchanop
           password: ${{secrets.SSH_PASSWORD}}
           port: '22'
           script: |
