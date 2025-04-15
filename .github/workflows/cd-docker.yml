@@ -7,7 +7,7 @@ on:
 
 jobs:
   release-docker-image-job:
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     steps:
       - uses: actions/checkout@v4
 
@@ -22,7 +22,7 @@ jobs:
 
   auto-deploy-docker-job:
     needs: release-docker-image-job
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
     env:
       CONTAINER_NAME: 'patchanop-vue-app'
       DOCKER_IMAGE_URL: 'ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}:${{  github.ref_name }}'
@@ -40,4 +40,4 @@ jobs:
             echo "${{ secrets.GITHUB_TOKEN }}" | docker login -u ${{ github.actor }} --password-stdin ghcr.io/${{ github.actor }}/${{ github.event.repository.name }}
             docker rm -f ${{ env.CONTAINER_NAME }} || true
             docker pull ${{ env.DOCKER_IMAGE_URL }}
-            docker run --restart=always -d --name ${{ env.CONTAINER_NAME }} -p 80:80 ${{ env.DOCKER_IMAGE_URL }}
+            docker run --restart=always -d --name ${{ env.CONTAINER_NAME }} -p 9003:80 ${{ env.DOCKER_IMAGE_URL }}
